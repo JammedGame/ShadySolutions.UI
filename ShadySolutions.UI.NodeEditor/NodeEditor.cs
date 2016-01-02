@@ -16,6 +16,7 @@ namespace ShadySolutions.UI.NodeEditor
         private int _SeekType;
         private Point _LastMouseLocation;
         private NodeValue _ConnectionSeeker;
+        private Bitmap _BackBuffer;
         private List<Node> _Nodes;
         public NodeEditor()
         {
@@ -32,6 +33,7 @@ namespace ShadySolutions.UI.NodeEditor
             {
                 NewNode.Outputs[i].SetOutputClickEvent(Connect_Output_Click);
             }
+            NewNode.EditorHolder = this;
             this._Nodes.Add(NewNode);
             this.Controls.Add(NewNode);
         }
@@ -95,43 +97,41 @@ namespace ShadySolutions.UI.NodeEditor
         private void DrawConnection(Graphics Draw, Point P0, Point P1)
         {
             List<Point> Points = GenerateCurve(P0, P1);
-            Bitmap Buffer = new Bitmap(this.Width, this.Height);
-            Graphics DrawBuffer = Graphics.FromImage(Buffer);
-            DrawBuffer.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            DrawBuffer.Clear(Color.FromArgb(0, 0, 0, 0));
             Pen OrangePen = new Pen(Color.Silver, 1);
             Pen BlackPen = new Pen(Color.Gray, 3);
             Points.Insert(0, P0);
             Points.Add(P1);
             for (int i = 0; i < Points.Count - 1; i++)
             {
-                DrawBuffer.DrawLine(BlackPen, Points[i], Points[i + 1]);
+                Draw.DrawLine(BlackPen, Points[i], Points[i + 1]);
             }
             for (int i = 0; i < Points.Count - 1; i++)
             {
-                DrawBuffer.DrawLine(OrangePen, Points[i], Points[i + 1]);
+                Draw.DrawLine(OrangePen, Points[i], Points[i + 1]);
             }
-            
-            Draw.DrawImage(Buffer, 0, 0);
-            DrawBuffer.Dispose();
-            Buffer.Dispose();
         }
         private void DrawConnections()
         {
             Graphics Draw = this.CreateGraphics();
-            Draw.Clear(Color.FromArgb(255,40,40,40));
-            for (int i = 0; i < this._Nodes.Count; i++)
+            Bitmap Buffer = new Bitmap(this.Width, this.Height);
+            Graphics DrawBuffer = Graphics.FromImage(Buffer);
+            DrawBuffer.Clear(Color.FromArgb(255, 40, 40, 40));
+            DrawBuffer.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            if(true)
             {
-                for(int j = 0; j < this._Nodes[i].Outputs.Count; j++)
+                for (int i = 0; i < this._Nodes.Count; i++)
                 {
-                    for(int k = 0; k < this._Nodes[i].Outputs[j].Outputs.Count; k++)
+                    for (int j = 0; j < this._Nodes[i].Outputs.Count; j++)
                     {
-                        Point P0 = this._Nodes[i].Outputs[j].Holder.Location;
-                        Point P1 = this._Nodes[i].Outputs[j].Outputs[k].Holder.Location;
-                        P0.Y += this._Nodes[i].Outputs[j].NodeValueIndex * 20 + 31;
-                        P0.X += this._Nodes[i].Outputs[j].Holder.Width;
-                        P1.Y += this._Nodes[i].Outputs[j].Outputs[k].NodeValueIndex * 20 + 31;
-                        DrawConnection(Draw, P0, P1);
+                        for (int k = 0; k < this._Nodes[i].Outputs[j].Outputs.Count; k++)
+                        {
+                            Point P0 = this._Nodes[i].Outputs[j].Holder.Location;
+                            Point P1 = this._Nodes[i].Outputs[j].Outputs[k].Holder.Location;
+                            P0.Y += this._Nodes[i].Outputs[j].NodeValueIndex * 20 + 31;
+                            P0.X += this._Nodes[i].Outputs[j].Holder.Width;
+                            P1.Y += this._Nodes[i].Outputs[j].Outputs[k].NodeValueIndex * 20 + 31;
+                            DrawConnection(DrawBuffer, P0, P1);
+                        }
                     }
                 }
             }
@@ -139,16 +139,19 @@ namespace ShadySolutions.UI.NodeEditor
             {
                 Point P0 = this._ConnectionSeeker.Holder.Location;
                 P0.Y += this._ConnectionSeeker.NodeValueIndex * 20 + 31;
-                if(this._SeekType == 0)
+                if (this._SeekType == 0)
                 {
-                    DrawConnection(Draw, this._LastMouseLocation, P0);
+                    DrawConnection(DrawBuffer, this._LastMouseLocation, P0);
                 }
                 else
                 {
                     P0.X += this._ConnectionSeeker.Holder.Width;
-                    DrawConnection(Draw, P0, this._LastMouseLocation);
+                    DrawConnection(DrawBuffer, P0, this._LastMouseLocation);
                 }
             }
+            Draw.DrawImage(Buffer, 0, 0);
+            DrawBuffer.Dispose();
+            Buffer.Dispose();
             Draw.Dispose();
         }
         private void NodeEditor_Paint(object sender, PaintEventArgs e)
@@ -157,6 +160,14 @@ namespace ShadySolutions.UI.NodeEditor
         }
         private void Connect_Input_Click(object sender, EventArgs e)
         {
+            MouseEventArgs me = e as MouseEventArgs;
+            if (me.Button == MouseButtons.Right)
+            {
+                this._ConnectionSeeker = null;
+                this._ConnectionInProgress = false;
+                this.PaintTimer.Enabled = false;
+                return;
+            }
             Control SenderAsControl = sender as Control;
             NodeValue Input = SenderAsControl.Tag as NodeValue;
             if (this._ConnectionInProgress && this._SeekType == 1)
@@ -165,6 +176,7 @@ namespace ShadySolutions.UI.NodeEditor
                 {
                     this._ConnectionSeeker = null;
                     this._ConnectionInProgress = false;
+                    this.PaintTimer.Enabled = false;
                     return;
                 }
                 if (Input.Input!=null)
@@ -177,12 +189,14 @@ namespace ShadySolutions.UI.NodeEditor
                 this._ConnectionSeeker.InvalidateConnectors();
                 this._ConnectionSeeker = null;
                 this._ConnectionInProgress = false;
+                this.PaintTimer.Enabled = false;
                 SenderAsControl.Invalidate();
                 this.Invalidate();
             }
             else if(!this._ConnectionInProgress)
             {
                 this._ConnectionInProgress = true;
+                this.PaintTimer.Enabled = true;
                 this._ConnectionSeeker = Input;
                 this._SeekType = 0;
             }
@@ -193,6 +207,14 @@ namespace ShadySolutions.UI.NodeEditor
         }
         private void Connect_Output_Click(object sender, EventArgs e)
         {
+            MouseEventArgs me = e as MouseEventArgs;
+            if (me.Button == MouseButtons.Right)
+            {
+                this._ConnectionSeeker = null;
+                this._ConnectionInProgress = false;
+                this.PaintTimer.Enabled = false;
+                return;
+            }
             Control SenderAsControl = sender as Control;
             NodeValue Output = SenderAsControl.Tag as NodeValue;
             if (this._ConnectionInProgress && this._SeekType == 0)
@@ -201,6 +223,7 @@ namespace ShadySolutions.UI.NodeEditor
                 {
                     this._ConnectionSeeker = null;
                     this._ConnectionInProgress = false;
+                    this.PaintTimer.Enabled = false;
                     return;
                 }
                 if (this._ConnectionSeeker.Input != null)
@@ -213,12 +236,14 @@ namespace ShadySolutions.UI.NodeEditor
                 this._ConnectionSeeker.InvalidateConnectors();
                 this._ConnectionSeeker = null;
                 this._ConnectionInProgress = false;
+                this.PaintTimer.Enabled = false;
                 SenderAsControl.Invalidate();
                 this.Invalidate();
             }
             else if (!this._ConnectionInProgress)
             {
                 this._ConnectionInProgress = true;
+                this.PaintTimer.Enabled = true;
                 this._ConnectionSeeker = Output;
                 this._SeekType = 1;
             }
@@ -231,6 +256,22 @@ namespace ShadySolutions.UI.NodeEditor
         {
             if (!_ConnectionInProgress) return;
             this._LastMouseLocation = e.Location;
+        }
+        private void PaintTimer_Tick(object sender, EventArgs e)
+        {
+            if (!this._ConnectionInProgress) return;
+            this.Invalidate();
+        }
+
+        private void NodeEditor_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                this._ConnectionSeeker = null;
+                this._ConnectionInProgress = false;
+                this.PaintTimer.Enabled = false;
+                this.Invalidate();
+            }
         }
     }
 }

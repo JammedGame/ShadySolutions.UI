@@ -28,7 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.PaintTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // PaintTimer
+            // 
+            this.PaintTimer.Enabled = true;
+            this.PaintTimer.Interval = 20;
+            this.PaintTimer.Tick += new System.EventHandler(this.PaintTimer_Tick);
             // 
             // NodeEditor
             // 
@@ -38,11 +46,14 @@
             this.Name = "NodeEditor";
             this.Size = new System.Drawing.Size(719, 534);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.NodeEditor_Paint);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NodeEditor_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.NodeEditor_MouseMove);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer PaintTimer;
     }
 }

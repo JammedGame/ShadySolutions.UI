@@ -14,6 +14,7 @@ namespace ShadySolutions.UI.NodeEditor
     {
         private bool _MouseIsDown;
         private Point _LastMousePoint;
+        private NodeEditor _EditorHolder;
         private List<NodeValue> _Values;
         private List<NodeValue> _Inputs;
         private List<NodeValue> _Outputs;
@@ -51,6 +52,18 @@ namespace ShadySolutions.UI.NodeEditor
             set
             {
                 _Outputs = value;
+            }
+        }
+        public NodeEditor EditorHolder
+        {
+            get
+            {
+                return _EditorHolder;
+            }
+
+            set
+            {
+                _EditorHolder = value;
             }
         }
         public Node()

@@ -184,5 +184,32 @@ namespace ShadySolutions.UI.NodeEditor
             NodeInputConnector.Invalidate();
             NodeOutputConnector.Invalidate();
         }
+        private void NodeOutputConnector_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                for(int i = 0; i < this._Outputs.Count; i++)
+                {
+                    this._Outputs[i]._Input = null;
+                    this._Outputs[i].InvalidateConnectors();
+                }
+                this._Outputs.Clear();
+                InvalidateConnectors();
+                this._Holder.EditorHolder.Invalidate();
+            }
+        }
+        private void NodeInputConnector_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (this._Input == null) return;
+                if (!this._Input.Outputs.Contains(this)) return;
+                this._Input._Outputs.Remove(this);
+                this._Input.InvalidateConnectors();
+                this._Input = null;
+                InvalidateConnectors();
+                this._Holder.EditorHolder.Invalidate();
+            }
+        }
     }
 }

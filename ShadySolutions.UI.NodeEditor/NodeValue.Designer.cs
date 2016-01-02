@@ -59,6 +59,7 @@
             this.NodeOutputConnector.TabIndex = 2;
             this.NodeOutputConnector.TabStop = false;
             this.NodeOutputConnector.Paint += new System.Windows.Forms.PaintEventHandler(this.NodeOutputConnector_Paint);
+            this.NodeOutputConnector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NodeOutputConnector_MouseClick);
             // 
             // NodeInputConnector
             // 
@@ -72,6 +73,7 @@
             this.NodeInputConnector.TabIndex = 1;
             this.NodeInputConnector.TabStop = false;
             this.NodeInputConnector.Paint += new System.Windows.Forms.PaintEventHandler(this.NodeInputConnector_Paint);
+            this.NodeInputConnector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NodeInputConnector_MouseClick);
             // 
             // NodeValue
             // 

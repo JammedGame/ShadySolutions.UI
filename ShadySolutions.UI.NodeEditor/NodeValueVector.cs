@@ -22,5 +22,14 @@ namespace ShadySolutions.UI.NodeEditor
             InitializeComponent();
             this.HasOutput = false;
         }
+
+        private void ValueVector_Click(object sender, EventArgs e)
+        {
+            VectorDialog Dialog = new VectorDialog(this.Value);
+            if(Dialog.ShowDialog() == DialogResult.OK)
+            {
+                this.Value = Dialog.Value;
+            }
+        }
     }
 }

@@ -97,6 +97,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ValueVector.cs" />
+    <Compile Include="VectorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VectorDialog.Designer.cs">
+      <DependentUpon>VectorDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Node.resx">
@@ -117,9 +123,15 @@
     <EmbeddedResource Include="NodeValueFloat.resx">
       <DependentUpon>NodeValueFloat.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueVector.resx">
+      <DependentUpon>NodeValueVector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VectorDialog.resx">
+      <DependentUpon>VectorDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\join_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\point-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
