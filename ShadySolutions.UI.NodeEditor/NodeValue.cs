@@ -14,8 +14,8 @@ namespace ShadySolutions.UI.NodeEditor
     {
         private int _NodeValueIndex;
         private NodeValue _Input;
-        private NodeValue _Output;
         private Node _Holder;
+        private List<NodeValue> _Outputs;
         protected ValueVector _Value;
         public bool HasInput
         {
@@ -79,19 +79,6 @@ namespace ShadySolutions.UI.NodeEditor
                 else this.HasValue = true;
             }
         }
-        public NodeValue Output
-        {
-            get
-            {
-                if (!this.HasOutput) return null;
-                return _Output;
-            }
-
-            set
-            {
-                _Output = value;
-            }
-        }     
         public Node Holder
         {
             get
@@ -102,6 +89,18 @@ namespace ShadySolutions.UI.NodeEditor
             set
             {
                 _Holder = value;
+            }
+        }
+        public List<NodeValue> Outputs
+        {
+            get
+            {
+                return _Outputs;
+            }
+
+            set
+            {
+                _Outputs = value;
             }
         }
         public virtual ValueVector Value
@@ -122,6 +121,7 @@ namespace ShadySolutions.UI.NodeEditor
             this._Value = new ValueVector();
             this.NodeInputConnector.Tag = this;
             this.NodeOutputConnector.Tag = this;
+            this._Outputs = new List<NodeValue>();
         }
         public NodeValue(string Title)
         {
@@ -130,6 +130,7 @@ namespace ShadySolutions.UI.NodeEditor
             this.TextLabel.Text = Title;
             this.NodeInputConnector.Tag = this;
             this.NodeOutputConnector.Tag = this;
+            this._Outputs = new List<NodeValue>();
         }
         public void SetEvents(MouseEventHandler MouseDownEvent, MouseEventHandler MouseUpEvent, MouseEventHandler MouseMoveEvent)
         {
@@ -142,7 +143,7 @@ namespace ShadySolutions.UI.NodeEditor
         }
         private void NodeOutputConnector_Paint(object sender, PaintEventArgs e)
         {
-            if(this.Output != null)
+            if(this.Outputs.Count > 0)
             {
                 Pen GrayPen = new Pen(Color.Gray, 3);
                 Pen OrangePen = new Pen(Color.Silver, 1);
@@ -177,6 +178,11 @@ namespace ShadySolutions.UI.NodeEditor
         public void SetOutputClickEvent(EventHandler Event)
         {
             this.NodeOutputConnector.Click += Event;
+        }
+        public void InvalidateConnectors()
+        {
+            NodeInputConnector.Invalidate();
+            NodeOutputConnector.Invalidate();
         }
     }
 }

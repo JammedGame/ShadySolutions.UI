@@ -92,11 +92,10 @@ namespace ShadySolutions.UI.NodeEditor
             Result.Y = (int)(0.5f * ((2.0f * p1.Y) + (-p0.Y + p2.Y) * Factor + (2.0f * p0.Y - 5.0f * p1.Y + 4 * p2.Y - p3.Y) * Factor2 + (-p0.Y + 3.0f * p1.Y - 3.0f * p2.Y + p3.Y) * Factor3));
             return Result;
         }
-        private void DrawConnection(Point P0, Point P1)
+        private void DrawConnection(Graphics Draw, Point P0, Point P1)
         {
             List<Point> Points = GenerateCurve(P0, P1);
             Bitmap Buffer = new Bitmap(this.Width, this.Height);
-            Graphics Draw = this.CreateGraphics();
             Graphics DrawBuffer = Graphics.FromImage(Buffer);
             DrawBuffer.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             DrawBuffer.Clear(Color.FromArgb(0, 0, 0, 0));
@@ -112,26 +111,27 @@ namespace ShadySolutions.UI.NodeEditor
             {
                 DrawBuffer.DrawLine(OrangePen, Points[i], Points[i + 1]);
             }
-            Draw.Clear(Color.FromArgb(255, 40, 40, 40));
+            
             Draw.DrawImage(Buffer, 0, 0);
             DrawBuffer.Dispose();
-            Draw.Dispose();
             Buffer.Dispose();
         }
         private void DrawConnections()
         {
-            for(int i = 0; i < this._Nodes.Count; i++)
+            Graphics Draw = this.CreateGraphics();
+            Draw.Clear(Color.FromArgb(255,40,40,40));
+            for (int i = 0; i < this._Nodes.Count; i++)
             {
                 for(int j = 0; j < this._Nodes[i].Outputs.Count; j++)
                 {
-                    if(this._Nodes[i].Outputs[j].Output != null)
+                    for(int k = 0; k < this._Nodes[i].Outputs[j].Outputs.Count; k++)
                     {
                         Point P0 = this._Nodes[i].Outputs[j].Holder.Location;
-                        Point P1 = this._Nodes[i].Outputs[j].Output.Holder.Location;
+                        Point P1 = this._Nodes[i].Outputs[j].Outputs[k].Holder.Location;
                         P0.Y += this._Nodes[i].Outputs[j].NodeValueIndex * 20 + 31;
                         P0.X += this._Nodes[i].Outputs[j].Holder.Width;
-                        P1.Y += this._Nodes[i].Outputs[j].Output.NodeValueIndex * 20 + 31;
-                        DrawConnection(P0, P1);
+                        P1.Y += this._Nodes[i].Outputs[j].Outputs[k].NodeValueIndex * 20 + 31;
+                        DrawConnection(Draw, P0, P1);
                     }
                 }
             }
@@ -141,14 +141,15 @@ namespace ShadySolutions.UI.NodeEditor
                 P0.Y += this._ConnectionSeeker.NodeValueIndex * 20 + 31;
                 if(this._SeekType == 0)
                 {
-                    DrawConnection(this._LastMouseLocation, P0);
+                    DrawConnection(Draw, this._LastMouseLocation, P0);
                 }
                 else
                 {
                     P0.X += this._ConnectionSeeker.Holder.Width;
-                    DrawConnection(P0, this._LastMouseLocation);
+                    DrawConnection(Draw, P0, this._LastMouseLocation);
                 }
             }
+            Draw.Dispose();
         }
         private void NodeEditor_Paint(object sender, PaintEventArgs e)
         {
@@ -168,16 +169,12 @@ namespace ShadySolutions.UI.NodeEditor
                 }
                 if (Input.Input!=null)
                 {
-                    Input.Input.Output = null;
+                    Input.Input.Outputs.Remove(Input);
                     Input.Input.Holder.Invalidate();
                 }
-                if(this._ConnectionSeeker.Output!=null)
-                {
-                    this._ConnectionSeeker.Output.Input = null;
-                    this._ConnectionSeeker.Output.Holder.Invalidate();
-                }
-                this._ConnectionSeeker.Output = Input;
+                this._ConnectionSeeker.Outputs.Add(Input);
                 Input.Input = this._ConnectionSeeker;
+                this._ConnectionSeeker.InvalidateConnectors();
                 this._ConnectionSeeker = null;
                 this._ConnectionInProgress = false;
                 SenderAsControl.Invalidate();
@@ -206,18 +203,14 @@ namespace ShadySolutions.UI.NodeEditor
                     this._ConnectionInProgress = false;
                     return;
                 }
-                if (Output.Output != null)
-                {
-                    Output.Output.Input = null;
-                    Output.Output.Holder.Invalidate();
-                }
                 if (this._ConnectionSeeker.Input != null)
                 {
-                    this._ConnectionSeeker.Input.Output = null;
+                    this._ConnectionSeeker.Input.Outputs.Remove(this._ConnectionSeeker);
                     this._ConnectionSeeker.Input.Holder.Invalidate();
                 }
                 this._ConnectionSeeker.Input = Output;
-                Output.Output = this._ConnectionSeeker;
+                Output.Outputs.Add(this._ConnectionSeeker);
+                this._ConnectionSeeker.InvalidateConnectors();
                 this._ConnectionSeeker = null;
                 this._ConnectionInProgress = false;
                 SenderAsControl.Invalidate();

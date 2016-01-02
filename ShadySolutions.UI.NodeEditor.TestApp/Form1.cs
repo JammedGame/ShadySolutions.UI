@@ -33,8 +33,8 @@ namespace ShadySolutions.UI.NodeEditor.TestApp
             Output.AddNodeValue(Surface);
             Output.AddNodeValue(Volume);
             Output.AddNodeValue(Displacement);
-            BSDF.Output = Surface;
-            Surface.Input = BSDF;
+            //BSDF.Outputs.Add(Surface);
+            //Surface.Input = BSDF;
             Editor.AddNode(Output);
         }
     }
