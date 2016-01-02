@@ -84,6 +84,12 @@
     <Compile Include="NodeValueOutput.Designer.cs">
       <DependentUpon>NodeValueOutput.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeValueString.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeValueString.Designer.cs">
+      <DependentUpon>NodeValueString.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeValueVector.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -122,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueFloat.resx">
       <DependentUpon>NodeValueFloat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueString.resx">
+      <DependentUpon>NodeValueString.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueVector.resx">
       <DependentUpon>NodeValueVector.cs</DependentUpon>

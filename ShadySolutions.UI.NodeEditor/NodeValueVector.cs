@@ -12,6 +12,18 @@ namespace ShadySolutions.UI.NodeEditor
 {
     public partial class NodeValueVector : NodeValue
     {
+        public override bool HasValue
+        {
+            get
+            {
+                return ValueVector.Visible;
+            }
+            set
+            {
+                ValueVector.Visible = value;
+                ValueLabel.Visible = value;
+            }
+        }
         public NodeValueVector() : base()
         {
             InitializeComponent();

@@ -12,6 +12,7 @@ namespace ShadySolutions.UI.NodeEditor
         private double _Y;
         private double _Z;
         private double _W;
+        private string _Value;
         public double X
         {
             get
@@ -58,6 +59,18 @@ namespace ShadySolutions.UI.NodeEditor
             set
             {
                 _W = value;
+            }
+        }
+        public string Value
+        {
+            get
+            {
+                return _Value;
+            }
+
+            set
+            {
+                _Value = value;
             }
         }
         public ValueVector()
