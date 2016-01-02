@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadySolutions.UI.NodeEditor", "ShadySolutions.UI.NodeEditor\ShadySolutions.UI.NodeEditor.csproj", "{2D0C6C3B-A3C9-42C1-B1BE-6DB132A6B931}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadySolutions.UI.NodeEditor.TestApp", "ShadySolutions.UI.NodeEditor.TestApp\ShadySolutions.UI.NodeEditor.TestApp.csproj", "{BCFB88D9-B4C3-485A-A717-28B3624EB8E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D0C6C3B-A3C9-42C1-B1BE-6DB132A6B931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0C6C3B-A3C9-42C1-B1BE-6DB132A6B931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0C6C3B-A3C9-42C1-B1BE-6DB132A6B931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0C6C3B-A3C9-42C1-B1BE-6DB132A6B931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCFB88D9-B4C3-485A-A717-28B3624EB8E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCFB88D9-B4C3-485A-A717-28B3624EB8E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCFB88D9-B4C3-485A-A717-28B3624EB8E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCFB88D9-B4C3-485A-A717-28B3624EB8E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
